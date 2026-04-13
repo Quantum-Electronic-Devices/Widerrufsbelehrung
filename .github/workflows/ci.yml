@@ -1,0 +1,63 @@
+name: "Build PDFs"
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+  pull_request:
+    branches:
+      - master
+
+  push:
+    # Ignore the push event when creating tags
+    tags-ignore:
+      - "[0-9]+.[0-9]+.[0-9]+"
+    paths-ignore:
+      - "README.md"
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        tex_file:
+          - { name: "widerrufsbelehrung_de", output: "Widerrufsbelehrung", description: "Widerrufsbelehrung (B2C)" }
+          - { name: "widerrufsbelehrung_en", output: "Right_of_cancellation", description: "Right of cancellation (B2C)" }
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Build PDF
+        uses: ./.github/actions/build
+        id: pdf-filename
+        with:
+          tex-filename: ${{ matrix.tex_file.name }}
+          output-filename: ${{ matrix.tex_file.output }}
+
+      - name: Parse base name from filename
+        id: pdf-basename
+        run: |
+          echo "value=$(basename ${{ steps.pdf-filename.outputs.value }})" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Upload PDF as artifact if not publishing
+        if: github.event.action != 'published'
+        uses: actions/upload-artifact@v7
+        with:
+          name: PDF-${{ steps.pdf-basename.outputs.value }}
+          path: ${{ steps.pdf-filename.outputs.value }}.pdf
+          archive: false
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Append PDF as an asset
+        if: github.event.action == 'published'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ github.ref_name }} "${{ steps.pdf-filename.outputs.value }}.pdf"#"${{ matrix.tex_file.description }}" --repo ${{ github.repository }}
+        shell: bash

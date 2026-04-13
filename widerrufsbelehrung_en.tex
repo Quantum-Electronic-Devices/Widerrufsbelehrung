@@ -1,0 +1,166 @@
+\DocumentMetadata{%
+  pdfstandard=A-3b,%
+  lang=en-GB,
+  pdfversion=1.7,% 2.0 is possible as well, but some validators don't support that yet
+}
+\documentclass[%
+    a4paper,%
+    10pt,
+%    draft  % Use draft to find overfull boxes, this seems to break the hyperref package
+]{scrartcl}
+
+\usepackage[pagenumber=no]{scrletter}
+\usepackage[british]{babel}
+\usepackage[strict=true]{csquotes}
+
+\usepackage[%
+  top=1.5cm,%
+  bottom=2.4cm,%
+  left=1.5cm,%
+  right=1.5cm,%
+  headheight = 1.74cm,%
+  headsep = 1cm,%
+  footskip=1cm,
+  includeheadfoot%
+]{geometry}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\sisetup{%
+  mode=match,
+  text-family-to-math = true,%
+  text-series-to-math = true%
+}
+
+\DeclareSIUnit{\days}{days}
+
+% Font setup
+\usepackage[default,scale=0.9]{opensans}
+\usepackage{lastpage}
+
+%%%%%%%%%%%%%%%%%%%%%
+% color definitions %
+%%%%%%%%%%%%%%%%%%%%%
+\definecolor{footnotecolor}{rgb}{0.45,0.45,0.45}% dark grey
+\definecolor{highlightColor}{HTML}{ff2d21}% QED red
+%%%%%%%%%%%%%%%%%%%%%
+% end color definitions %
+%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%
+% commands definitions %
+%%%%%%%%%%%%%%%%%%%%%
+
+\def\EditDate{%
+2026-04-13%
+}
+
+\def\DocType{%
+Right of cancellation
+}
+
+%%%%%%%%%%%%%%%%%%%%%
+% end variable definitions %
+%%%%%%%%%%%%%%%%%%%%%
+
+\hypersetup{
+    hidelinks,
+    pdftitle={\DocType Quantum Electronic Devices GmbH},
+}
+
+\usepackage{scrlayer-scrpage}
+\ihead{%
+  \includegraphics[width=9cm]{images/qed_logo.pdf}%
+}
+\ohead{%
+  \color{footnotecolor}  \DocType%
+}
+\ofoot{%
+  \color{footnotecolor} Stand: \EditDate
+}
+\renewcommand*\pagemark{{\thepage~/~\pageref*{LastPage}}}
+\addtokomafont{pageheadfoot}{\upshape}
+\setkomavar{firstfoot}{\centering\pagemark}
+
+% Command to create a horizontal line with a description text below
+% Used to create a form
+\newlength{\rulewidth}
+\setlength{\rulewidth}{1pt}
+\newlength{\ruleandnamegap}
+\setlength{\ruleandnamegap}{.6\baselineskip}
+\newcommand{\namefont}{\footnotesize}
+\newcommand{\ruleandname}[2]{%
+  \par\noindent
+  \rule{#2}{\rulewidth}\par
+  \vspace{\dimexpr-\baselineskip+\ruleandnamegap}
+  \noindent{\namefont #1}\par
+  \addvspace{\baselineskip}
+}
+
+\begin{document}
+\section*{Statutory Right}
+You have the right to cancel your order without giving any reason within \qty{14}{\days} from the day on which you or a third party indicated by you (other than the carrier) receives the goods purchased (or last good, lot or piece if the order relates to goods or multiple lots or pieces delivered separately) or from the day of the conclusion of the contract, in the case of services or digital content not supplied in a tangible medium (e.g. CD or DVD).
+
+You must inform us (Quantum Electronic Devices GmbH, Alfred-Nobel-Str. 13 , D-68519 Viernheim) of your decision to withdraw from this contract by an unequivocal
+statement (e.g a letter sent by post or e-mail). You may use the attached standard
+withdrawal form, but it is not obligatory.
+
+To meet the cancellation deadline, it is sufficient for you to send your communication on the exercise of the right to cancellation before the cancellation period has expired.
+
+\section*{Effects of Cancellation }
+If you cancel your order, we will reimburse all payments received from you for the goods purchased (with the exception of the supplementary costs resulting
+from your choice of a type of delivery other than the least expensive type of standard delivery offered by us) and will also reimburse delivery charges for the least expensive type of delivery offered by us. This reimbursement will be made without undue delay and, except in the situations described below, by no later than \qty{14}{\days} from the day on which we received your communication on the cancellation of this order. For such reimbursement we will use the same means of payment as you used for the initial transaction, unless you have expressly agreed otherwise. In any event, you will not incur any fees as a result of such reimbursement. We may withhold reimbursement until we have received the goods back or you have supplied evidence of having sent back the goods, whichever is the earliest.
+
+Note that you must send back the goods without undue delay and in any case by no later than \qty{14}{\days} from the day on which you communicate to us your cancellation of this order via our Returns Support Center. To meet the deadline, it is sufficient for you to send the goods before the period of \qty{14}{\days} has expired. You will have to bear the direct cost of returning the goods. You are only liable for any diminished value of the goods resulting from the handling other than what is necessary to establish the nature, characteristics and functioning of the goods.
+
+\section*{Exceptions to the Right of Cancellation }
+The right to cancellation does not exist or lapses, as the case may be, in the case of contracts regarding:
+\begin{itemize}
+  \item the delivery of goods which are not suitable for return due to health protection or hygienic reasons if unsealed by you after delivery, or which, due to their nature, are, after delivery, inseparately mixed with other items;
+  \item the delivery of sealed audio or video recordings or of sealed software if unsealed by you after delivery;
+  \item the supply of goods made to customer specifications or clearly customized to personal needs;
+  \item the supply of goods which may deteriorate or expire rapidly;
+  \item a service if Quantum Electronic Devices and you acknowledged and expressly accepted before you placed your order that we could start to deliver the service, and that you could not cancel it once the contract had been fully performed;
+\end{itemize}
+
+\newpage
+\section*{Standard Withdrawal Form}
+If you wish to cancel the contract, please fill out this form and return it by post or email to \href{mailto:info@quantum-electronic-devices.de}{info@quantum-electronic-devices.de}.
+
+\newgeometry{%
+top=1.5cm,%
+bottom=2.5cm,%
+left=2.5cm,%
+right=2.5cm,%
+headheight = 1.74cm,%
+headsep = 1cm,%
+includeheadfoot%
+}
+\newcounter{savepage}
+\setcounter{savepage}{\value{page}}
+\AtBeginLetter{%
+  \addtocounter{savepage}{-1}
+  \setcounter{page}{\value{savepage}}%
+  \renewcommand*\pagemark{}%
+  \date{}%
+}
+\begin{letter}[pagenumber=no]{%
+  Quantum Electronic Devices GmbH\\
+  Alfred-Nobel-Str. 13\\
+  68519 Viernheim\\
+  \uppercase{Germany}
+}
+\opening{Dear Sir or Madam,}
+I hereby give notice that I withdraw from my contract of sale of the following goods / for the provision of the following service:
+
+\addvspace{\baselineskip}
+\ruleandname{Ordered on}{12cm}
+\ruleandname{Invoice number, optional}{12cm}
+\ruleandname{Name of consume}{12cm}
+\ruleandname{Address of consumer}{12cm}
+\ruleandname{Signature of consumer (only if this form is notified on paper)}{8cm}
+\ruleandname{Date}{4cm}
+\end{letter}
+\end{document}

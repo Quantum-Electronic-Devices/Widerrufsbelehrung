@@ -1,0 +1,163 @@
+\DocumentMetadata{%
+  pdfstandard=A-3b,%
+  lang=de,
+  pdfversion=1.7,% 2.0 is possible as well, but some validators don't support that yet
+}
+\documentclass[%
+    a4paper,%
+    10pt,
+%    draft  % Use draft to find overfull boxes, this seems to break the hyperref package
+]{scrartcl}
+
+\usepackage[pagenumber=no]{scrletter}
+\usepackage[ngerman]{babel}
+\usepackage[strict=true]{csquotes}
+
+\usepackage[%
+  top=1.5cm,%
+  bottom=2.4cm,%
+  left=1.5cm,%
+  right=1.5cm,%
+  headheight = 1.74cm,%
+  headsep = 1cm,%
+  footskip=1cm,
+  includeheadfoot%
+]{geometry}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\sisetup{%
+  mode=match,
+  text-family-to-math = true,%
+  text-series-to-math = true%
+}
+
+\DeclareSIUnit{\days}{Tagen}
+
+% Font setup
+\usepackage[default,scale=0.9]{opensans}
+\usepackage{lastpage}
+
+%%%%%%%%%%%%%%%%%%%%%
+% color definitions %
+%%%%%%%%%%%%%%%%%%%%%
+\definecolor{footnotecolor}{rgb}{0.45,0.45,0.45}% dark grey
+\definecolor{highlightColor}{HTML}{ff2d21}% QED red
+%%%%%%%%%%%%%%%%%%%%%
+% end color definitions %
+%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%
+% commands definitions %
+%%%%%%%%%%%%%%%%%%%%%
+
+\def\EditDate{%
+2026-04-13%
+}
+
+\def\DocType{%
+Widerrufsbelehrung
+}
+
+%%%%%%%%%%%%%%%%%%%%%
+% end variable definitions %
+%%%%%%%%%%%%%%%%%%%%%
+
+\hypersetup{
+    hidelinks,
+    pdftitle={Widerrufsbelehrung Quantum Electronic Devices GmbH},
+}
+
+\usepackage{scrlayer-scrpage}
+\ihead{%
+  \includegraphics[width=9cm]{images/qed_logo.pdf}%
+}
+\ohead{%
+  \color{footnotecolor}  \DocType%
+}
+\ofoot{%
+  \color{footnotecolor} Stand: \EditDate
+}
+\renewcommand*\pagemark{{\thepage~/~\pageref*{LastPage}}}
+\addtokomafont{pageheadfoot}{\upshape}
+\setkomavar{firstfoot}{\centering\pagemark}
+
+% Command to create a horizontal line with a description text below
+% Used to create a form
+\newlength{\rulewidth}
+\setlength{\rulewidth}{1pt}
+\newlength{\ruleandnamegap}
+\setlength{\ruleandnamegap}{.6\baselineskip}
+\newcommand{\namefont}{\footnotesize}
+\newcommand{\ruleandname}[2]{%
+  \par\noindent
+  \rule{#2}{\rulewidth}\par
+  \vspace{\dimexpr-\baselineskip+\ruleandnamegap}
+  \noindent{\namefont #1}\par
+  \addvspace{\baselineskip}
+}
+
+\begin{document}
+\section*{Widerrufsrecht}
+Sie haben das Recht, diesen Vertrag innerhalb von \qty{14}{\days} ab dem Tag, an dem Sie oder ein von Ihnen benannter Dritter, der nicht Beförderer ist, die Ware (oder die letzte Ware, Teilsendung oder Stück im Falle eines Vertrags über mehrere Waren einer einheitlichen Bestellung oder die Lieferung einer Ware in mehreren Teilsendungen oder Stücken) in Besitz genommen haben oder ab dem Tag des Vertragsschlusses, im Falle von digitalen Inhalten, die nicht auf einem körperlichen Datenträger geliefert werden (z. B. CDs oder DVDs), ohne Angabe von Gründen zu widerrufen.
+
+Um Ihr Widerrufsrecht auszuüben, müssen Sie uns (Quantum Electronic Devices GmbH, Alfred-Nobel-Str. 13 , D-68519 Viernheim) mittels einer eindeutigen Erklärung (z.B. ein mit der Post versandter Brief, oder E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren. Sie können dafür das beigefügte Muster-Widerrufsformular verwenden, das jedoch nicht vorgeschrieben ist.
+
+Zur Wahrung der Widerrufsfrist reicht es aus, dass Sie die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absenden.
+
+\section*{Folgen des Widerrufs}
+Wenn Sie diesen Vertrag widerrufen, erstatten wir Ihnen alle Zahlungen für die erworbene Waren, die wir von Ihnen erhalten haben  (mit Ausnahme der zusätzlichen Kosten, die sich daraus ergeben, dass Sie eine andere Art der Lieferung als die von uns angebotene, günstigste Standardlieferung gewählt haben), und wir erstatten Ihnen die Kosten der günstigsten von uns angebotenen Standardlieferung. Diese Rückzahlung wird unverzüglich und spätestens, vorbehaltlich der unten genannten Situationen, innerhalb von vierzehn Tagen ab dem Tag erfolgen, an dem die Mitteilung über Ihren Widerruf dieses Vertrags bei uns eingegangen ist. Für diese Rückzahlung verwenden wir dasselbe Zahlungsmittel, das Sie bei der ursprünglichen Transaktion eingesetzt haben, es sei denn, mit Ihnen wurde ausdrücklich etwas anderes vereinbart. Für die Rückzahlung berechnen wir Ihnen in keinem Fall Entgelte. Wir können die Rückzahlung verweigern, bis wir die Waren wieder zurückerhalten haben oder bis Sie den Nachweis erbracht haben, dass Sie die Waren zurückgesandt haben, je nachdem, welches der frühere Zeitpunkt ist.
+
+Sie haben die Waren unverzüglich und in jedem Fall spätestens binnen \qty{14}{\days} ab dem Tag, an dem Sie uns über den Widerruf dieses Vertrags unterrichten, an uns zurückzusenden oder zu übergeben. Die Frist ist gewahrt, wenn Sie die Waren vor Ablauf der Frist von \qty{14}{\days} absenden. Sie tragen die unmittelbaren Kosten der Rücksendung der Waren. Sie müssen für einen etwaigen Wertverlust der Waren nur aufkommen, wenn dieser Wertverlust auf einen zur Prüfung der Beschaffenheit, Eigenschaften und Funktionsweise der Waren nicht notwendigen Umgang mit ihnen zurückzuführen ist.
+
+\section*{Ausnahmen vom Widerrufsrecht}
+Das Widerrufsrecht besteht nicht bzw. erlischt bei folgenden Verträgen:
+\begin{itemize}
+  \item zur Lieferung von Waren, die aus Gründen des Gesundheitsschutzes oder aus Hygienegründen nicht zur Rückgabe geeignet sind und deren Versiegelung nach der Lieferung entfernt wurde oder die nach der Lieferung aufgrund ihrer Beschaffenheit untrennbar mit anderen Gütern vermischt wurden;
+  \item zur Lieferung von Ton- oder Videoaufnahmen oder Computersoftware in einer versiegelten Packung, wenn die Versiegelung nach der Lieferung entfernt wurde;
+  \item zur Lieferung von Waren, die nach Kundenspezifikation angefertigt werden oder eindeutig auf die persönlichen Bedürfnisse zugeschnitten sind
+  \item zur Lieferung von Waren, die schnell verderben können oder deren Verfallsdatum schnell überschritten würde;
+  \item bei Dienstleistungen, wenn Quantum Electronic Devices diese vollständig erbracht hat und Sie vor der Bestellung zur Kenntnis genommen und ausdrücklich zugestimmt haben, dass wir mit der Erbringung der Dienstleistung beginnen können und Sie Ihr Widerrufsrecht bei vollständiger Vertragserfüllung verlieren;
+\end{itemize}
+
+\newpage
+\section*{Muster-Widerrufsformular}
+Wenn Sie den Vertrag widerrufen wollen, dann füllen Sie bitte dieses Formular aus und senden Sie es postalisch oder per E-mail an \href{mailto:info@quantum-electronic-devices.de}{info@quantum-electronic-devices.de} zurück.
+
+\newgeometry{%
+top=1.5cm,%
+bottom=2.5cm,%
+left=2.5cm,%
+right=2.5cm,%
+headheight = 1.74cm,%
+headsep = 1cm,%
+includeheadfoot%
+}
+\newcounter{savepage}
+\setcounter{savepage}{\value{page}}
+\AtBeginLetter{%
+  \addtocounter{savepage}{-1}
+  \setcounter{page}{\value{savepage}}%
+  \renewcommand*\pagemark{}%
+  \date{}%
+}
+\begin{letter}[pagenumber=no]{%
+  Quantum Electronic Devices GmbH\\
+  Alfred-Nobel-Str. 13\\
+  68519 Viernheim\\
+  \uppercase{Germany}
+}
+\opening{Sehr geehrte Damen und Herren,}
+hiermit widerrufe ich den von mir abgeschlossenen Vertrag über den Kauf der folgenden Waren / die Erbringung der folgenden Dienstleistung:
+
+\addvspace{\baselineskip}
+\ruleandname{Bestellt am}{12cm}
+\ruleandname{Rechnungsnummer, optional}{12cm}
+\ruleandname{Name des Verbrauchers}{12cm}
+\ruleandname{Anschrift des Verbrauchers}{12cm}
+\ruleandname{Unterschrift des Verbrauchers (nur bei Mitteilung auf Papier)}{8cm}
+\ruleandname{Datum}{4cm}
+\end{letter}
+\end{document}
