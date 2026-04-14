@@ -38,7 +38,7 @@ jobs:
         with:
           run-id: ${{ github.event.workflow_run.id }}
           path: ./.visual_diff/source
-          pattern: PDF-*
+          pattern: '*.pdf'
           merge-multiple: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
