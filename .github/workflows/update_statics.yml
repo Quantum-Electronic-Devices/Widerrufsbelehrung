@@ -29,4 +29,5 @@ jobs:
         with:
           repository: ${{ matrix.static.repo }}
           version_file: ${{ matrix.static.version_file }}
-          github-token: ${{ secrets.QED_LOGO_PA }}
+          remote-token: ${{ secrets.QED_LOGO_PA }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
