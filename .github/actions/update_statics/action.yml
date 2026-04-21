@@ -50,7 +50,6 @@ runs:
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
-        git pull
         git checkout -b update_statics/${{ steps.static-release.outputs.latest_tag }}
         git add -- . ':!./.tmp'
         git commit -m "Bumps ${{ inputs.repository }} from ${{ steps.static-release.outputs.current_tag }} to ${{ steps.static-release.outputs.latest_tag }}."
