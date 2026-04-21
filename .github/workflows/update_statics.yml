@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         static:
-          - {repo: "Quantum-Electronic-Devices/Logos", version_file: "‎.logo_version"}
+          - {repo: "Quantum-Electronic-Devices/Logos", version_file: ".logo_version"}
     steps:
       - name: Checkout
         uses: actions/checkout@v6

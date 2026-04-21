@@ -25,7 +25,7 @@ runs:
       run: |
         LATEST_TAG=$(gh api repos/${{ inputs.repository }}/releases/latest --jq ".tag_name")
         echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-        CURRENT_TAG=$(cat "${{ inputs.version_file }}")
+        CURRENT_TAG=$(<"${{ inputs.version_file }}")
         echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
       shell: bash
 
