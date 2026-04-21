@@ -59,3 +59,15 @@ runs:
         --body "Bumps [${{ inputs.repository }}](https://github.com/${{ inputs.repository }}) from ${{ steps.static-release.outputs.current_tag }} to ${{ steps.static-release.outputs.latest_tag }}." \
         --label dependencies
       shell: bash
+
+    - name: Cleanup branch on failure
+      if: failure()
+      env:
+        BRANCH_NAME: update_statics/${{ steps.static-release.outputs.latest_tag }}
+      run: |
+        if git ls-remote --exit-code --heads origin "$BRANCH_NAME" > /dev/null; then
+          echo "Deleting branch $BRANCH_NAME"
+          git push origin --delete "$BRANCH_NAME"
+        else
+          echo "Branch does not exist, skipping"
+        fi
