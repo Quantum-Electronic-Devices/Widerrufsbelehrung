@@ -40,7 +40,7 @@ runs:
         # Update statics
         for file in ./.tmp/*; do find ./ -type f -name $(basename $file) -not -path '*/.*' -exec cp $file {} \; ; done
         # Update current release
-        echo "${{ steps.static-release.outputs.latest_tag }}" > {{ inputs.version_file }}
+        echo "${{ steps.static-release.outputs.latest_tag }}" > ${{ inputs.version_file }}
       shell: bash
 
     - name: Create pull request
@@ -71,3 +71,4 @@ runs:
         else
           echo "Branch does not exist, skipping"
         fi
+      shell: bash
