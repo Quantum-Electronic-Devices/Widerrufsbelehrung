@@ -26,6 +26,8 @@ runs:
 
     - name: Update statics
       if: steps.static-release.outputs.current_tag != steps.static-release.outputs.latest_tag
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
         # Download the release
         gh release download --pattern '*.pdf' -D ./.tmp -R ${{ inputs.repository }}
