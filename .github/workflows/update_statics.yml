@@ -29,3 +29,4 @@ jobs:
         with:
           repository: ${{ matrix.static.repo }}
           version_file: ${{ matrix.static.version_file }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}

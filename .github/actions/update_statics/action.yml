@@ -8,6 +8,10 @@ inputs:
     required: true
     description: "The file name used to define the static content version."
 
+  github-token:
+    required: true
+    description: "A token that allows creating a pull request."
+
 runs:
   using: "composite"
   steps:
@@ -34,7 +38,7 @@ runs:
     - name: Create pull request
       if: steps.static-release.outputs.current_tag != steps.static-release.outputs.latest_tag
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
