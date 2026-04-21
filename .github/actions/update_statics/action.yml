@@ -17,6 +17,8 @@ runs:
   steps:
     - name: Get latest static release tag
       id: static-release
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
         LATEST_TAG=$(gh api /repos/${{ inputs.repository }}/releases/latest | jq -r ".tag_name")
         echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
