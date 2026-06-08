@@ -2,7 +2,7 @@
 
 Dies sind ist die Widerrufsbelehrung der Quantum Electronic Devices GmbH für Endkunden.
 
-Das Musterwiderrufsformular basiert auf den gesetzlichen Vorgaben nach (Artikel 246a EGBGB Anlage 2)[https://www.gesetze-im-internet.de/bgbeg/art_253anlage_2.html].
+Das Musterwiderrufsformular basiert auf den gesetzlichen Vorgaben nach [Artikel 246a EGBGB Anlage 2](https://www.gesetze-im-internet.de/bgbeg/art_253anlage_2.html).
 
 ## Fragen
 Für Fragen stehen wir Ihnen gerne zur Verfügung. Bitte wenden Sie sich per [E-mail](mailto:legal@quantum-electronic-devices.de) an uns.
