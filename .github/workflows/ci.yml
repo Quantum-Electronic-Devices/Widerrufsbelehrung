@@ -1,4 +1,5 @@
 name: "Build PDFs"
+
 on:
   schedule:
     - cron: "0 0 * * *"
@@ -13,15 +14,20 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+"
     paths-ignore:
       - "README.md"
+
   release:
     types:
       - published
+
+# Default to read-only permissions. Publishing gets write access in its own job.
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     strategy:
       matrix:
         tex_file:
@@ -29,25 +35,49 @@ jobs:
           - { name: "widerrufsbelehrung_en", output: "Right_of_cancellation", description: "Right of cancellation (B2C)" }
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
+      - name: Download repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Build PDF
-        uses: ./.github/actions/build
+        uses: Quantum-Electronic-Devices/texlive-build@83a2e45b54a7797677c07b3b79e70e914a2bb40f # v1.0.0
         id: pdf-filename
         with:
           tex-filename: ${{ matrix.tex_file.name }}
           output-filename: ${{ matrix.tex_file.output }}
 
-      - name: Parse base name from filename
+      - name: Validate and stage PDF
         id: pdf-basename
-        run: |
-          echo "value=$(basename ${{ steps.pdf-filename.outputs.value }})" >> $GITHUB_OUTPUT
+        env:
+          PDF_PATH: ${{ steps.pdf-filename.outputs.value }}
+          PDF_OUTPUT: ${{ matrix.tex_file.output }}
+          PDF_DESCRIPTION: ${{ matrix.tex_file.description }}
+          TEX_FILENAME: ${{ matrix.tex_file.name }}
         shell: bash
+        run: |
+          set -euo pipefail
+          # Only accept a simple basename; don't allow paths or newlines in artifact names.
+          value="$(basename -- "$PDF_PATH")"
+          if [[ ! "$value" =~ ^[A-Za-z0-9._-]+$ ]] || [[ "$value" == "." || "$value" == ".." ]]; then
+            echo "Unexpected PDF filename: $value" >&2
+            exit 1
+          fi
+          if [[ ! -f "${PDF_PATH}.pdf" ]]; then
+            echo "Expected PDF not found: ${PDF_PATH}.pdf" >&2
+            exit 1
+          fi
+
+          stage_dir="$RUNNER_TEMP/release-pdf"
+          mkdir -p "$stage_dir"
+          cp -- "${PDF_PATH}.pdf" "$stage_dir/${PDF_OUTPUT}.pdf"
+          # Store metadata alongside the PDF for the publishing job.
+          printf '%s\n%s\n' "${PDF_OUTPUT}.pdf" "$PDF_DESCRIPTION" > "$stage_dir/${TEX_FILENAME}.metadata"
+          printf 'value=%s\n' "$value" >> "$GITHUB_OUTPUT"
 
       - name: Upload PDF as artifact if not publishing
-        if: github.event.action != 'published'
-        uses: actions/upload-artifact@v7
+        if: github.event_name != 'release' || github.event.action != 'published'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: PDF-${{ steps.pdf-basename.outputs.value }}
           path: ${{ steps.pdf-filename.outputs.value }}.pdf
@@ -55,9 +85,54 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Append PDF as an asset
-        if: github.event.action == 'published'
+      - name: Upload PDF and metadata for release publishing
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-pdf-${{ matrix.tex_file.name }}
+          path: ${{ runner.temp }}/release-pdf/*
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    if: github.event_name == 'release' && github.event.action == 'published'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download release PDFs and metadata
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: release-pdf-*
+          path: dist
+          merge-multiple: true
+
+      - name: Upload PDFs to release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ github.ref_name }} "${{ steps.pdf-filename.outputs.value }}.pdf"#"${{ matrix.tex_file.description }}" --repo ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
         shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          metadata_files=(dist/*.metadata)
+          if (( ${#metadata_files[@]} == 0 )); then
+            echo "No PDF metadata files found" >&2
+            exit 1
+          fi
+
+          for metadata in "${metadata_files[@]}"; do
+            mapfile -t fields < "$metadata"
+            if (( ${#fields[@]} != 2 )); then
+              echo "Invalid metadata file: $metadata" >&2
+              exit 1
+            fi
+            pdf_name="${fields[0]}"
+            description="${fields[1]}"
+            if [[ ! "$pdf_name" =~ ^[A-Za-z0-9._-]+\.pdf$ ]] || [[ ! -f "dist/$pdf_name" ]]; then
+              echo "Invalid or missing PDF: $pdf_name" >&2
+              exit 1
+            fi
+            gh release upload "$RELEASE_TAG" "dist/$pdf_name#$description" --repo "$GITHUB_REPOSITORY"
+          done

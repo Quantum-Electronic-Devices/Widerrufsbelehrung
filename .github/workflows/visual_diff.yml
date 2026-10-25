@@ -7,15 +7,15 @@ on:
     workflows: [ "Build PDFs" ]
     types: [ completed ]
 
+permissions:
+  contents: read
+  actions: read   # needed to download artifacts from the triggering run
+
 jobs:
   visual_diff:
     # Only run the deployment if the build workflow succeeded and it we are not publishing, because this will not create an artifact
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event != 'release'
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        python-version: [ "3.14" ]
 
     steps:
       - name: Running in response to ${{ github.event.workflow_run.event }} event
@@ -24,17 +24,12 @@ jobs:
         run: echo "$EVENT_CONTEXT"
 
       - name: Download repository
-        uses: actions/checkout@v7
-
-      - name: Set up python ${{ matrix.python-version }}
-        uses: actions/setup-python@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          cache: 'pip' # caching pip dependencies
-          python-version: ${{ matrix.python-version }}
-          cache-dependency-path: requirements*.txt
+          persist-credentials: false
 
       - name: Download build artifact from triggered workflow
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.1
         with:
           run-id: ${{ github.event.workflow_run.id }}
           path: ./.visual_diff/source
@@ -54,26 +49,17 @@ jobs:
         shell: bash
 
       - name: Run visual diff
-        uses: ./.github/actions/visual_diff
+        uses: Quantum-Electronic-Devices/pdf-visual-diff@4e1611f183a669639772d52b45130386dbf2096d # v1.1.0
         with:
           dpi: 100
           directory-a: ./.visual_diff/release
           directory-b: ./.visual_diff/source
           output-directory: ./.visual_diff/results
 
-      - name: Sanitize Python version string
-        if: failure()
-        id: platform
-        env:
-          PYTHON_VERSION: ${{ matrix.python-version }}
-        run: |
-          echo "value=${PYTHON_VERSION//./_}" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Store results on a failed diff
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: visual-diff-${{ steps.platform.outputs.value }}
+          name: visual-diff-results
           path: ".visual_diff/results/*"
           retention-days: 7
