@@ -23,9 +23,19 @@ on:
 permissions:
   contents: read
 
+# A newer run for the same ref replaces an older one that is still building.
+# Releases are never cancelled. (A cancelled run does not trigger the visual diff.)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'release' }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    # The TeX sources of a pull request are code (LuaLaTeX can run Lua), so a
+    # runaway or malicious document must not be able to keep the job alive for
+    # the 6 hour default.
+    timeout-minutes: 15
     permissions:
       contents: read
     strategy:
@@ -75,6 +85,9 @@ jobs:
           printf '%s\n%s\n' "${PDF_OUTPUT}.pdf" "$PDF_DESCRIPTION" > "$stage_dir/${TEX_FILENAME}.metadata"
           printf 'value=%s\n' "$value" >> "$GITHUB_OUTPUT"
 
+      # With `archive: false` the artifact is named after the FILE (e.g. AVB.pdf) and
+      # `name` is ignored. The visual diff workflow relies on this: it downloads the
+      # artifacts with the pattern '*.pdf'.
       - name: Upload PDF as artifact if not publishing
         if: github.event_name != 'release' || github.event.action != 'published'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -98,6 +111,7 @@ jobs:
     if: github.event_name == 'release' && github.event.action == 'published'
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
     steps:
