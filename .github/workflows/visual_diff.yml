@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   visual_diff:
-    # Only run the deployment if the build workflow succeeded and it we are not publishing, because this will not create an artifact
+    # Only run the deployment if the build workflow succeeded and we are not publishing, because this will not create an artifact
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event != 'release'
     runs-on: ubuntu-latest
 
