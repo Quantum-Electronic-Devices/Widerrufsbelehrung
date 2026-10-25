@@ -3,12 +3,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
-  push:
-    paths:
-      - ".github/workflows/update_statics.yml"
-    branches:
-      - master
-      - main
 
 jobs:
   update-APQ-Logo:
@@ -22,12 +16,16 @@ jobs:
           - {repo: "Quantum-Electronic-Devices/Logos", version_file: ".logo_version"}
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Update statics
-        uses: ./.github/actions/update_statics
+        uses: Quantum-Electronic-Devices/sync_assets@5a11e6a87ffc95ec0c432b32b02d58ddc6e90574 # v1.0.0
         with:
           repository: ${{ matrix.static.repo }}
           version_file: ${{ matrix.static.version_file }}
           remote-token: ${{ secrets.QED_LOGO_PA }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          commit-user-name: qed-bot
+          commit-user-id: 279461323
