@@ -1,16 +1,25 @@
 name: Update statics
 on:
   workflow_dispatch:
+    inputs:
+      force-new-pr:
+        description: "Close the existing pull request for the same release (if any) and open a new one under the current bot account"
+        type: boolean
+        default: false
   schedule:
     - cron: "0 0 * * *"
 
+permissions: {}
+
 jobs:
-  update-APQ-Logo:
+  update-static-files:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
-      pull-requests	: write
+      pull-requests: write
     strategy:
+      fail-fast: false # one failing source must not cancel the others
       matrix:
         static:
           - {repo: "Quantum-Electronic-Devices/Logos", version_file: ".logo_version"}
@@ -21,11 +30,12 @@ jobs:
           persist-credentials: false
 
       - name: Update statics
-        uses: Quantum-Electronic-Devices/sync_assets@bccccfff05ee074767e961feb2444483c5d1139f # v1.0.1
+        uses: Quantum-Electronic-Devices/sync_assets@2890caf68c4623fc75fd6bc4c0708798c56cd8ac # v1.2.1
         with:
           repository: ${{ matrix.static.repo }}
           version_file: ${{ matrix.static.version_file }}
           remote-token: ${{ secrets.QED_LOGO_PA }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.QED_BOT_PAT }}
           commit-user-name: qed-bot
           commit-user-id: 279461323
+          force-new-pr: ${{ inputs.force-new-pr }}
