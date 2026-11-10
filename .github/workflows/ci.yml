@@ -51,7 +51,7 @@ jobs:
           persist-credentials: false
 
       - name: Build PDF
-        uses: Quantum-Electronic-Devices/texlive-build@1fd6912ab6e9c68403e76e456215bcfe6fbe5b7f # v1.2.0
+        uses: Quantum-Electronic-Devices/texlive-build@e80fc1b964ed3e69e21917525078a8ee06ca40df # v1.3.0
         id: pdf-filename
         with:
           tex-filename: ${{ matrix.tex_file.name }}
